@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+        
+	<import resource="../config/context.xml" />
+	<import resource="../config/database.xml" />
+
+	<bean id="itemReader"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader"
+		scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql"
+			value="Select o.order_number, o.username, o.b_email, substring(od.sku from 0 for 8) as productId, o.order_date
+                    from orders as o inner join orderlines as od
+                    on o.order_number = od.order_number
+                    and od.line_type = 'item'
+                    and o.catalog_id = '#{jobParameters['catalog']}'
+                    where order_date > '#{jobParameters['date']}'
+                    order by order_date asc
+                    limit (1000)" />
+		<property name="rowMapper">
+			<bean class="com.backcountry.SalesRowMapper" />
+		</property>
+	</bean>
+
+    <bean id="wishlistReader"
+          class="org.springframework.batch.item.database.JdbcCursorItemReader"
+          scope="step">
+        <property name="dataSource" ref="wishlistDS" />
+        <property name="sql"
+                  value="Select I.RELATIONSHIP_ID, IL.SITE_CODE, I.ID, IL.USER_ID
+                            from ITEM I
+                            inner join ITEM_LIST IL
+                            on I.ITEM_LIST_ID = IL.ID
+                            where IL.SITE_CODE = '#{jobParameters['catalog']}'
+                            and  I.RELATIONSHIP_ID > '#{jobParameters['relationshipId']}'
+                            and rownum &lt;= 1000
+                            order by I.RELATIONSHIP_ID asc" />
+        <property name="rowMapper">
+            <bean class="com.backcountry.pojo.mapper.UserWishlistMapper" />
+        </property>
+    </bean>
+
+    <job id="wishlistLoaderJob" xmlns="http://www.springframework.org/schema/batch">
+        <step id="step1">
+            <tasklet>
+                <chunk reader="wishlistReader" writer="wishlistWriter" commit-interval="1000" />
+            </tasklet>
+        </step>
+    </job>
+
+	<bean id="itemWriter" class="com.backcountry.writers.PredictionIOWriter">
+	</bean>
+
+    <bean id="wishlistWriter" class="com.backcountry.writers.WishlistIOWriter">
+    </bean>
+
+</beans>
