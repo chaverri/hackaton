@@ -41,12 +41,11 @@
 	</jdbc:initialize-database>
 	-->
 
-    <bean id="viewsDataSource" class="org.apache.commons.dbcp.BasicDataSource"
-          destroy-method="close">
-        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-        <property name="url" value="jdbc:oracle:thin:@oredw1.pp.bcinfra.net:1521/EDW.pp.bcinfra.net" />
-        <property name="username" value="readonly" />
-        <property name="password" value="readingg0at" />
+    <bean id="viewsDataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
+        <property name="URL" value="jdbc:oracle:thin:@10.42.60.166:1521/EDW.pp.bcinfra.net" />
+        <property name="user" value="readonly"/>
+        <property name="password" value="readingg0at"/>
+        <property name="connectionCachingEnabled" value="true"/>
     </bean>
 	
 </beans>

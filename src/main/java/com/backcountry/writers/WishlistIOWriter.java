@@ -1,5 +1,6 @@
 package com.backcountry.writers;
 
+import com.backcountry.RunScheduler;
 import com.backcountry.pojo.UserWishlist;
 import io.prediction.Client;
 import io.prediction.UserActionItemRequestBuilder;
@@ -70,7 +71,7 @@ public class WishlistIOWriter implements ItemWriter<UserWishlist> {
 //
 //            //TODO: Write last date in mongo
 //            //In the mean time it is going to write on a class
-//            RunScheduler.lastRunDate = action.getTimeStamp();
+            RunScheduler.lastRelationshipId = action.getRelationshipId();
 //
 //            RunScheduler.total.incrementAndGet();
 //            RunScheduler.items.add(action.getItemId());

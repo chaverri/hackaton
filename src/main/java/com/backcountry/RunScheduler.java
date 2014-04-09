@@ -6,6 +6,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.text.Format;
@@ -22,12 +23,14 @@ public class RunScheduler {
     private JobLauncher jobLauncher;
 
     @Autowired
+    @Qualifier("viewsLoaderJob")
     private Job job;
 
     public static AtomicInteger total = new AtomicInteger(0);
     public static HashSet<String> items = new HashSet<String>();
     public static HashSet<String> users = new HashSet<String>();
 
+    public static long lastRelationshipId = 0;
     public static Date lastRunDate = new GregorianCalendar(2014, 0, 1).getTime();
 
     public void run() {
