@@ -40,5 +40,13 @@
 		<jdbc:script location="org/springframework/batch/core/schema-mysql.sql" />
 	</jdbc:initialize-database>
 	-->
+
+    <bean id="viewsDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@oredw1.pp.bcinfra.net:1521/EDW.pp.bcinfra.net" />
+        <property name="username" value="readonly" />
+        <property name="password" value="readingg0at" />
+    </bean>
 	
 </beans>

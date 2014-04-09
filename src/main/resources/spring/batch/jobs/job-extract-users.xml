@@ -63,4 +63,38 @@
     <bean id="wishlistWriter" class="com.backcountry.writers.WishlistIOWriter">
     </bean>
 
+    <!-- VIEWS -->
+
+    <bean id="viewsReader"
+          class="org.springframework.batch.item.database.JdbcCursorItemReader"
+          scope="step">
+        <property name="dataSource" ref="viewsDataSource" />
+        <property name="sql"
+                  value="SELECT P.STYLE_ID
+                        , P.INV_EVENT_DATE_ID
+                        , USER_ID
+                        FROM  EDW.FACT_VISIT_PDP P
+                        INNER JOIN EDW.DIM_WEBSITE_STOREFRONT  S
+                          ON P.WEBSITE_STOREFRONT_ID = S.WEBSITE_STOREFRONT_ID
+                        WHERE P.INV_EVENT_DATE_ID = #{jobParameters['date']}
+                            AND P.STYLE_ID IS NOT NULL
+                            AND P.USER_ID IS NOT NULL
+                            AND S.CATALOG_ID  = '#{jobParameters['catalog']}'" />
+        <property name="rowMapper">
+            <bean class="com.backcountry.ViewsRowMapper" />
+        </property>
+    </bean>
+
+    <bean id="viewsWriter" class="com.backcountry.writers.ViewsIOWriter">
+    </bean>
+
+    <job id="viewsLoaderJob" xmlns="http://www.springframework.org/schema/batch">
+        <step id="load">
+            <tasklet>
+                <chunk reader="viewsReader" writer="viewsWriter"
+                       commit-interval="1000" />
+            </tasklet>
+        </step>
+    </job>
+
 </beans>
