@@ -21,10 +21,20 @@ public class App {
 
         //TODO: remove
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName("oracle.jdbc.OracleDriver");
             Connection connection = null;
             connection = DriverManager.getConnection(
-                "jdbc:oracle:thin:@10.42.35.4:1521/ATGPRD4.pp.bcinfra.net", "atg_wishlist", "atgw15hl1st$");
+                    "jdbc:oracle:thin:@10.42.35.4:1521/ATGPRD4.pp.bcinfra.net", "atg_wishlist", "atgw15hl1st$");
+            connection.close();
+            System.out.println("Connection OK");
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        try {
+            Class.forName("oracle.jdbc.OracleDriver");
+            Connection connection = null;
+            connection = DriverManager.getConnection(
+                    "jdbc:oracle:thin:@10.42.60.166:1521/EDW.pp.bcinfra.net", "readonly", "readingg0at");
             connection.close();
             System.out.println("Connection OK");
         } catch(Exception e){
