@@ -1,7 +1,7 @@
 package com.backcountry.writers;
 
-import com.backcountry.RunScheduler;
 import com.backcountry.UserAction;
+import com.backcountry.ViewsRunner;
 import io.prediction.Client;
 import io.prediction.UserActionItemRequestBuilder;
 import org.joda.time.DateTime;
@@ -54,11 +54,11 @@ public class ViewsIOWriter implements ItemWriter<UserAction> {
 
             //TODO: Write last date in mongo
             //In the mean time it is going to write on a class
-            RunScheduler.lastRunDate = action.getTimeStamp();
+            ViewsRunner.lastRunDate = action.getTimeStamp();
 
-            RunScheduler.total.incrementAndGet();
-            RunScheduler.items.add(action.getItemId());
-            RunScheduler.users.add(action.getUserID());
+            ViewsRunner.total.incrementAndGet();
+            ViewsRunner.items.add(action.getItemId());
+            ViewsRunner.users.add(action.getUserID());
 
         }
     }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -60,6 +61,11 @@ public class ViewsRunner {
             date = formatter.format(lastRunDate);
             System.out.println("Last Run Date : " + date + " - users :" + users.size() + " - items:" + items.size() + " actions:" + total.get());
 
+            Calendar c = Calendar.getInstance();
+            c.setTime(lastRunDate);
+            c.add(Calendar.DATE, 1);
+
+            lastRunDate = c.getTime();
 
         } catch (Exception e) {
             e.printStackTrace();

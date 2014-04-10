@@ -2,51 +2,17 @@
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:orcl="http://www.springframework.org/schema/data/orcl"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/jdbc 
-		http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
+		http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/data/orcl
+        http://www.springframework.org/schema/data/orcl/spring-data-orcl-1.0.xsd">
 
-    <!-- connect to database -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" p:url="jdbc:postgresql://logan.pp.bcinfra.net:8998/bcs"
-          p:driverClassName="org.postgresql.Driver" p:poolPreparedStatements="true" p:maxActive="1"
-          p:maxIdle="1" p:username="bcs" p:password="gi2uvibay"/>
-
-    <!--<bean id="wishlistDS" class="org.apache.commons.dbcp.BasicDataSource" p:url="jdbc:oracle:thin:@oratgc2h1.pp.bcinfra.net:1521/ATGPRD4.pp.bcinfra.net"-->
-          <!--p:driverClassName="oracle.jdbc.OracleDriver" p:maxActive="1"-->
-          <!--p:username="atg_wishlist" p:password="atgw15hl1st$"/>-->
-
-    <bean id="wishlistDS" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
-        <property name="URL" value="jdbc:oracle:thin:@10.42.35.4:1521/ATGPRD4.pp.bcinfra.net" />
-        <property name="user" value="atg_wishlist"/>
-        <property name="password" value="atgw15hl1st$"/>
-        <property name="connectionCachingEnabled" value="true"/>
-    </bean>
-    <!--<bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="wishlistDS">-->
-        <!--<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>-->
-        <!--<property name="url" value="jdbc:oracle:thin:@10.42.35.4:1521/ATGPRD4.pp.bcinfra.net"/>-->
-        <!--<property name="username" value="atg_wishlist"/>-->
-        <!--<property name="password" value="atgw15hl1st$"/>-->
-        <!--<property name="validationQuery" value="SELECT 1 FROM DUAL"/>-->
-        <!--<property name="testOnBorrow" value="true"/>-->
-    <!--</bean>-->
-
-    <bean id="transactionManager"
-		class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
-	
-	<!-- create job-meta tables automatically 
-	<jdbc:initialize-database data-source="dataSource">
-		<jdbc:script location="org/springframework/batch/core/schema-drop-mysql.sql" />
-		<jdbc:script location="org/springframework/batch/core/schema-mysql.sql" />
-	</jdbc:initialize-database>
-	-->
-
-    <bean id="viewsDataSource" class="org.apache.commons.dbcp.BasicDataSource"
-          destroy-method="close">
-        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-        <property name="url" value="jdbc:oracle:thin:@oredw1.pp.bcinfra.net:1521/EDW.pp.bcinfra.net" />
-        <property name="username" value="readonly" />
-        <property name="password" value="readingg0at" />
-    </bean>
+    <orcl:pooling-datasource id="viewsDataSource"
+                             url="jdbc:oracle:thin:@oredw1.pp.bcinfra.net:1521/EDW.pp.bcinfra.net"
+                             username="readonly"
+                             password="readingg0at"/>
 	
 </beans>
